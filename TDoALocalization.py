@@ -13,8 +13,8 @@ class TDoALocalization:
         range_difference_matrix = np.array([[R[0]], [R[1]]])
         range_k_matrix = 0.5 * np.array([[R[0] - K[0] + base_K], [R[1] - K[1] + base_K]])
 
-        r_coefficient = np.diag(coordinate_difference_matrix * range_difference_matrix)
-        constant = np.diag(coordinate_difference_matrix * range_k_matrix)
+        r_coefficient = (np.matmul(coordinate_difference_matrix, range_difference_matrix))
+        constant = (np.matmul(coordinate_difference_matrix, range_k_matrix))
 
         print("Coefficient of R: " + str(r_coefficient))
         print("Constant added: " + str(constant))
