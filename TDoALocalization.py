@@ -30,7 +30,10 @@ class TDoALocalization:
         range_coefficient = 2*base_anchor.X_POS*self.r_coefficient[0][0] + 2*base_anchor.Y_POS*self.r_coefficient[1][0] - 2*self.r_coefficient[0][0]*self.constant[0][0] - 2*2*self.r_coefficient[1][0]*self.constant[1][0]
         range_constant = -1*(self.base_K - 2*base_anchor.X_POS*self.constant[0][0] - 2*base_anchor.Y_POS*self.constant[1][0] + self.constant[0][0]*self.constant[0][0] + self.constant[1][0]*self.constant[1][0])
 
-        r_discriminant = math.sqrt(range_coefficient ** 2 - 4*range_squared_coefficient*range_constant)
+        try:
+            r_discriminant = math.sqrt(range_coefficient ** 2 - 4*range_squared_coefficient*range_constant)
+        except ValueError:
+            raise ValueError("These values result in an imaginary R")
 
         return (-1*range_coefficient + r_discriminant)/(2*range_squared_coefficient), (-1*range_coefficient - r_discriminant)/(2*range_squared_coefficient)
         
