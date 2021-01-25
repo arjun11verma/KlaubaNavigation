@@ -14,9 +14,9 @@ print("Constant added: " + str(constant))
 
 r_one, r_two = localization_algorithms.chanHoApproximationOfR(BASE_ANCHOR)
 
-approximated_r = r_one if r_coefficient[0][0]*r_one + constant[0][0] > 0 and r_coefficient[1][0]*r_one + constant[1][0] > 0 else r_two
+chanho_approximated_r = r_one if r_coefficient[0][0]*r_one + constant[0][0] > 0 and r_coefficient[1][0]*r_one + constant[1][0] > 0 else r_two
 
-print("Approximation of (x, y): " + str(r_coefficient[0][0]*approximated_r + constant[0][0]) + ", " +  str(r_coefficient[1][0]*approximated_r + constant[1][0]))
+print("Chan Ho Approximation of (x, y): " + str(r_coefficient[0][0]*chanho_approximated_r + constant[0][0]) + ", " +  str(r_coefficient[1][0]*chanho_approximated_r + constant[1][0]))
 
 # Harvey = Mihir
 # ChanHo = Arjun
