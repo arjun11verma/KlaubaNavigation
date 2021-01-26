@@ -1,5 +1,6 @@
 from Anchor import anchor
 import math
+import numpy as np
 from TDoALocalization import TDoALocalization
 import numpy as np
 
@@ -90,7 +91,7 @@ class UnitTest:
             print(f"Actual x: {self.mobileStation[0]}\tChan-Ho x: {approx_x}\tError: {round((approx_x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}%")
             print(f"Actual y: {self.mobileStation[1]}\tChan-Ho y: {approx_y}\tError: {round((approx_y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}%\n")
 
-            return (approx_x, approx_y)
+            return np.array([approx_x, approx_y]), np.array([self.mobileStation[0], self.mobileStation[1]])
 
         else:
             raise RuntimeError("TDoA values out of range")
@@ -114,7 +115,7 @@ class UnitTest:
         print(f"Actual x: {self.mobileStation[0]}\tHarbi X: {x}\tError: {round((x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}%")
         print(f"Actual y: {self.mobileStation[1]}\tHarbi Y: {y}\tError: {round((y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}%\n")
 
-        return (x, y)
+        return np.array([x, y]), np.array([self.mobileStation[0], self.mobileStation[1]])
 
     def finish(self):
         print(f"==============================================================UNIT TEST {self.unitTestID} FINISHED\n")
