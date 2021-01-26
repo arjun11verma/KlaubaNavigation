@@ -1,6 +1,7 @@
 from Anchor import anchor
 import math
 from TDoALocalization import TDoALocalization
+import numpy as np
 
 class UnitTest:
     """
@@ -29,13 +30,31 @@ class UnitTest:
 
         self.unitTestID = unitTestID
 
-        print(f"UNIT TEST {self.unitTestID} BEGINNING=============================================================")
+        self.noise = np.array([0, 0, 0])
 
+        print(f"UNIT TEST {self.unitTestID} BEGINNING=============================================================\n")
+    
     def printDetails(self):
-        print(f"\nMobile station: ({self.mobileStation[0]}, {self.mobileStation[1]})")
-        print(f"Anchor 1: ({self.anchors[0].X_POS}, {self.anchors[0].Y_POS})")
-        print(f"Anchor 2: ({self.anchors[1].X_POS}, {self.anchors[1].Y_POS})")
-        print(f"Anchor 3: ({self.anchors[2].X_POS}, {self.anchors[2].Y_POS})")
+        print(f"Noise: {self.noise}\n")
+        print(f"Mobile station: ({self.mobileStation[0]}, {self.mobileStation[1]})")
+        print(f"Anchor1: ({self.anchors[0].X_POS}, {self.anchors[0].Y_POS})\tNoisy TDOA: {self.anchors[0].TDOA_BASE}\tNoiseless TDOA: {self.anchors[0].TDOA_BASE - self.noise[0]}")
+        print(f"Anchor2: ({self.anchors[1].X_POS}, {self.anchors[1].Y_POS})\tNoisy TDOA: {self.anchors[1].TDOA_BASE}\tNoiseless TDOA: {self.anchors[1].TDOA_BASE - self.noise[1]}")
+        print(f"Anchor3: ({self.anchors[2].X_POS}, {self.anchors[2].Y_POS})\tNoisy TDOA: {self.anchors[2].TDOA_BASE}\tNoiseless TDOA: {self.anchors[2].TDOA_BASE - self.noise[2]}")
+        
+    def addNoise(self):
+        # Add AWGN (additive white gaussian noise) to the TDOAs
+        # to introduce delay estimation error as described in Chan Ho
+        # paper
+        
+        # 0.001 / c^2 is the noise power given in the Chan paper,
+        # and in white Gaussian noise the variance (whose square
+        # # root is the standard deviation) is is a measure
+        # of the noise power
+        self.noise = np.random.normal(0, math.sqrt(0.001 / (self.c**2)), 3)
+
+        self.anchors[0].TDOA_BASE += self.noise[0]
+        self.anchors[1].TDOA_BASE += self.noise[1]
+        self.anchors[2].TDOA_BASE += self.noise[2]
 
     def getDistanceToMS(self, x, y):
         return math.sqrt((x - self.mobileStation[0]) ** 2 + (y - self.mobileStation[1]) ** 2)
@@ -68,8 +87,8 @@ class UnitTest:
             approx_x = r_coefficient[0][0]*chanho_approximated_r + constant[0][0]
             approx_y = r_coefficient[1][0]*chanho_approximated_r + constant[1][0]
 
-            print(f"Actual x: {self.mobileStation[0]}\tChan-Ho x: {approx_x}\tError: {round((approx_x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}")
-            print(f"Actual y: {self.mobileStation[1]}\tChan-Ho y: {approx_y}\tError: {round((approx_y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}\n")
+            print(f"Actual x: {self.mobileStation[0]}\tChan-Ho x: {approx_x}\tError: {round((approx_x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}%")
+            print(f"Actual y: {self.mobileStation[1]}\tChan-Ho y: {approx_y}\tError: {round((approx_y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}%\n")
 
             return (approx_x, approx_y)
 
@@ -92,8 +111,8 @@ class UnitTest:
         x = x[0]
         y = y[0]
 
-        print(f"Actual x: {self.mobileStation[0]}\tHarbi X: {x}\tError: {round((x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}")
-        print(f"Actual y: {self.mobileStation[1]}\tHarbi Y: {y}\tError: {round((y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}\n")
+        print(f"Actual x: {self.mobileStation[0]}\tHarbi X: {x}\tError: {round((x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}%")
+        print(f"Actual y: {self.mobileStation[1]}\tHarbi Y: {y}\tError: {round((y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}%\n")
 
         return (x, y)
 

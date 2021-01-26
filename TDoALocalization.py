@@ -1,5 +1,6 @@
 import numpy as np;
 import math;
+from Anchor import anchor
 
 c = 0.299792458 # m/ns
 
@@ -101,22 +102,38 @@ class TDoALocalization:
     anchors = list of three anchors
     """
     def harbiApproximation(self, anchors):
+
         base_K = anchors[0].X_POS ** 2 + anchors[0].Y_POS ** 2
         K = self.getK((anchors[1], anchors[2]))
         
         # home BTS = anchors[0]
-        
-        r_coeff_0, constant_0 = self.coordinatesInTermsOfR(anchors[0], (anchors[1], anchors[2]))
-        r_one_0, r_two_0 = self.chanHoApproximationOfR(anchors[0])
+
+        # Create deep copies of each object since we'll be modifying them and don't
+        # want to touch the originals
+        baseAnchor = anchor('base', anchors[0].X_POS, anchors[0].Y_POS, anchors[0].TDOA_BASE)
+        anchor1 = anchor(1, anchors[1].X_POS, anchors[1].Y_POS, anchors[1].TDOA_BASE)
+        anchor2 = anchor(2, anchors[2].X_POS, anchors[2].Y_POS, anchors[2].TDOA_BASE)
+
+        r_coeff_0, constant_0 = self.coordinatesInTermsOfR(baseAnchor, (anchor1, anchor2))
+        r_one_0, r_two_0 = self.chanHoApproximationOfR(baseAnchor)
 
         chanHoR1 = r_one_0 if r_one_0 > 0 else r_two_0
         xo1 = r_coeff_0[0][0] * chanHoR1 + constant_0[0][0]
         yo1 = r_coeff_0[1][0] * chanHoR1 + constant_0[1][0]
-        
+
         # home BTS = anchors[1]
 
-        r_coeff_1, constant_1 = self.coordinatesInTermsOfR(anchors[1], (anchors[0], anchors[2]))
-        r_one_1, r_two_1 = self.chanHoApproximationOfR(anchors[1])
+        # Adjust the TDOAs to make anchors[1] the base anchor from which
+        # the other TDOAs are measured
+
+        TDOA_to_subtract = anchors[1].TDOA_BASE
+
+        baseAnchor = anchor('base', anchors[1].X_POS, anchors[1].Y_POS, 0)
+        anchor1 = anchor(1, anchors[0].X_POS, anchors[0].Y_POS, anchors[0].TDOA_BASE - TDOA_to_subtract)
+        anchor2 = anchor(2, anchors[2].X_POS, anchors[2].Y_POS, anchors[2].TDOA_BASE - TDOA_to_subtract)
+        
+        r_coeff_1, constant_1 = self.coordinatesInTermsOfR(baseAnchor, (anchor1, anchor2))
+        r_one_1, r_two_1 = self.chanHoApproximationOfR(baseAnchor)
         
         chanHoR2 = r_one_1 if r_one_1 > 0 else r_two_1
         xo2 = r_coeff_1[0][0] * chanHoR2 + constant_1[0][0]
@@ -131,11 +148,11 @@ class TDoALocalization:
             [[ (x1 - xo1) / chanHoR1, (x2 - xo2) / chanHoR2],
              [ (y1 - yo1) / chanHoR1, (y2 - yo2) / chanHoR2]]
         )
-        
+
         Qt = np.transpose(Q)
-        
+
         omega = math.sqrt(0.5 * np.trace(np.matmul(Qt, Q)))
-        
+
         anchor_coordinate_differences = self.getAnchorCoordinateDifferences(anchors[0], (anchors[1], anchors[2]))
         coordinate_difference_matrix = self.getCoordinateDifferenceMatrix(anchor_coordinate_differences)
 
