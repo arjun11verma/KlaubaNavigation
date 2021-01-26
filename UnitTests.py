@@ -69,8 +69,8 @@ class UnitTest:
             approx_x = r_coefficient[0][0]*chanho_approximated_r + constant[0][0]
             approx_y = r_coefficient[1][0]*chanho_approximated_r + constant[1][0]
 
-            print(f"Actual x: {self.mobileStation[0]}\tChan-Ho x: {approx_x}\tError: {round((approx_x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}")
-            print(f"Actual y: {self.mobileStation[1]}\tChan-Ho y: {approx_y}\tError: {round((approx_y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}\n")
+            print(f"Actual x: {self.mobileStation[0]}\tChan-Ho x: {approx_x}\tError: {round((approx_x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}%")
+            print(f"Actual y: {self.mobileStation[1]}\tChan-Ho y: {approx_y}\tError: {round((approx_y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}%\n")
 
             return np.array([approx_x, approx_y]), np.array([self.mobileStation[0], self.mobileStation[1]])
 
@@ -93,8 +93,8 @@ class UnitTest:
         x = x[0]
         y = y[0]
 
-        print(f"Actual x: {self.mobileStation[0]}\tHarbi X: {x}\tError: {round((x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}")
-        print(f"Actual y: {self.mobileStation[1]}\tHarbi Y: {y}\tError: {round((y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}\n")
+        print(f"Actual x: {self.mobileStation[0]}\tHarbi X: {x}\tError: {round((x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}%")
+        print(f"Actual y: {self.mobileStation[1]}\tHarbi Y: {y}\tError: {round((y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}%\n")
 
         return np.array([x, y]), np.array([self.mobileStation[0], self.mobileStation[1]])
 

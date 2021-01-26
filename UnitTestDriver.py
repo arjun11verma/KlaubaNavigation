@@ -1,5 +1,6 @@
 from UnitTests import UnitTest
 from random import randint
+from matplotlib import pyplot
 import traceback
 import numpy as np
 import math
@@ -19,7 +20,7 @@ test.getHarbiApproximation()
 test.finish()
 """
 
-TOTAL_TRIALS = 50
+TOTAL_TRIALS = 100
 
 chanho_coordinate_errors = []
 harbi_coordinate_errors = []
@@ -53,6 +54,9 @@ for i in range(TOTAL_TRIALS):
 average_chanho_error = 0
 average_harbi_error = 0
 
+chanho_errors = []
+harbi_errors = []
+
 def vector_magnitude(position_vector):
     return math.sqrt(sum(x ** 2 for x in position_vector))
 
@@ -61,12 +65,15 @@ for error in chanho_coordinate_errors:
     real_vector = error[1]
     difference_vector = np.subtract(approximated_vector, real_vector)
     average_chanho_error += abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector))
+    chanho_errors.append(abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector)))
 
 for error in harbi_coordinate_errors:
     approximated_vector = error[0]
     real_vector = error[1]
+    if(math.isnan(approximated_vector[0]) or math.isnan(approximated_vector[1])): pass
     difference_vector = np.subtract(approximated_vector, real_vector)
     average_harbi_error += abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector))
+    harbi_errors.append(abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector)))
 
 average_chanho_error /= TOTAL_TRIALS
 average_harbi_error /= TOTAL_TRIALS
@@ -74,4 +81,10 @@ average_harbi_error /= TOTAL_TRIALS
 print(f'Average vector error of ChanHo Approximation over {TOTAL_TRIALS} trials: {round(average_chanho_error * 100, 3)}%')
 
 print(f'Average vector error of Harbi Approximation over {TOTAL_TRIALS} trials: {round(average_harbi_error * 100, 3)}%')
+
+pyplot.step(np.array([error[1] for error in chanho_coordinate_errors]), [round(error * 100, 3) for error in chanho_errors], 'o', color = 'black')
+pyplot.title("Chanho estimation errors by original position vector length")
+pyplot.xlabel("Position vector length")
+pyplot.ylabel("Predicted Vector Percent Error")
+pyplot.show()
 

@@ -6,9 +6,9 @@ localization_algorithms = TDoALocalization()
 c = 0.299792458
 
 # Arjun test code
-BASE_ANCHOR = anchor('base', 8, 7, 0)
-ANCHOR_1 = anchor(1, 6, 1, (math.sqrt(50) - math.sqrt(2)) / c)
-ANCHOR_2 = anchor(2, 9, 3, (math.sqrt(29) - math.sqrt(2)) / c)
+BASE_ANCHOR = anchor('base', 3, 9, 0)
+ANCHOR_1 = anchor(1, 4, 8, 1.723)
+ANCHOR_2 = anchor(2, 10, 3, 11.643)
 
 r_coefficient, constant = localization_algorithms.coordinatesInTermsOfR(BASE_ANCHOR, (ANCHOR_1, ANCHOR_2))
 
