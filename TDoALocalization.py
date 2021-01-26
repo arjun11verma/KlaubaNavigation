@@ -77,15 +77,16 @@ class TDoALocalization:
         chanHoR1 = r_one_0 if r_one_0 > 0 else r_two_0
         xo1 = r_coeff_0[0][0] * chanHoR1 + constant_0[0][0]
         yo1 = r_coeff_0[1][0] * chanHoR1 + constant_0[1][0]
-
+        
         # home BTS = anchors[1]
+
         r_coeff_1, constant_1 = self.coordinatesInTermsOfR(anchors[1], (anchors[0], anchors[2]))
         r_one_1, r_two_1 = self.chanHoApproximationOfR(anchors[1])
-
+        
         chanHoR2 = r_one_1 if r_one_1 > 0 else r_two_1
         xo2 = r_coeff_1[0][0] * chanHoR2 + constant_1[0][0]
         yo2 = r_coeff_1[1][0] * chanHoR2 + constant_1[1][0]
-        
+
         x1 = anchors[0].X_POS
         y1 = anchors[0].Y_POS
         x2 = anchors[1].X_POS

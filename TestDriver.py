@@ -3,11 +3,12 @@ from TDoALocalization import TDoALocalization;
 import math
 
 localization_algorithms = TDoALocalization()
+c = 0.299792458
 
 # Arjun test code
-BASE_ANCHOR = anchor('base', 0, 0, 0)
-ANCHOR_1 = anchor(1, 5, 0, 10)
-ANCHOR_2 = anchor(2, 0, 5, 2)
+BASE_ANCHOR = anchor('base', 2, 1, 0)
+ANCHOR_1 = anchor(1, 4, 2, (math.sqrt(5) - math.sqrt(2)) / c)
+ANCHOR_2 = anchor(2, 5, 2, (math.sqrt(8) - math.sqrt(2)) / c)
 
 r_coefficient, constant = localization_algorithms.coordinatesInTermsOfR(BASE_ANCHOR, (ANCHOR_1, ANCHOR_2))
 
@@ -26,28 +27,18 @@ else:
     print("TDoA values out of range")
 
 
-"""
+
 # Mihir test code
-anchorA = anchor(1, 1, 2, 0)
-anchorB = anchor(2, 3, 1, 1)
-anchorC = anchor(3, 0, 0, math.sqrt(2) - 1)
+anchorA = anchor(1, 2, 1, 0)
+anchorB = anchor(2, 4, 2, (math.sqrt(5) - math.sqrt(2)) / c)
+anchorC = anchor(3, 5, 2, (math.sqrt(8) - math.sqrt(2)) / c)
 
-r_coefficient, constant = localization_algorithms.coordinatesInTermsOfR(anchorB, (anchorA, anchorC))
+#anchorA = anchor(1, 1, 2, 0)
+#anchorB = anchor(2, 3, 1, 1/c)
+#anchorC = anchor(3, 0, 0, (math.sqrt(2) - 1)/c)
 
-print(f'Coefficient of R:\n{r_coefficient}')
-print(f'Constant added:\n{constant}')
+x, y = localization_algorithms.harbiApproximation((anchorA, anchorB, anchorC))
+print(f"(x, y) = {x}, {y}")
 
-r_one, r_two = localization_algorithms.chanHoApproximationOfR(anchorB)
-
-print(f'Chan Ho Approximations of R: {r_one}, {r_two}')
-
-chanho_approximated_r = r_one if r_one > 0 else r_two
-
-if(chanho_approximated_r > 0):
-    print(f'Chan Ho Approximation of (x, y): ({round(r_coefficient[0][0]*chanho_approximated_r + constant[0][0], 3)}, {round(r_coefficient[1][0]*chanho_approximated_r + constant[1][0], 3)})')
-else:
-    print("TDoA values out of range")
-"""
-
-# Harvey = Mihir
+# Harbi = Mihir
 # ChanHo = Arjun
