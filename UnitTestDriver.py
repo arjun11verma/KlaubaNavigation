@@ -2,6 +2,21 @@ from UnitTests import UnitTest
 from random import randint
 import traceback
 
+print()
+
+"""
+ms = (7, 8)
+bts1 = (8, 7)
+bts2 = (6, 1)
+bts3 = (9, 3)
+
+test = UnitTest(ms, bts1, bts2, bts3, 1)
+test.printDetails()
+test.getChanHoApproximation()
+test.getHarbiApproximation()
+test.finish()
+"""
+
 for i in range(1, 11):
     ms   = (randint(1, 10), randint(1, 10))
     bts1 = (randint(1, 10), randint(1, 10))

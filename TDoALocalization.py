@@ -51,6 +51,38 @@ class TDoALocalization:
         if not (hasattr(self, 'r_coefficient') and hasattr(self, 'constant')):
             raise AttributeError("Please call the coordinates in terms of R method before approximating R")
         
+        # 0 = (r1_squared_coeff) * (r1)^2 + (r1_linear_coeff) * (r1) + (r1_const)
+        # x = a * r1 + b
+        # y = c * r1 + d
+
+        a = self.r_coefficient[0][0]
+        b = self.constant[0][0]
+        c = self.r_coefficient[1][0]
+        d = self.constant[1][0]
+
+        x1 = base_anchor.X_POS
+        y1 = base_anchor.Y_POS
+
+        k1 = x1**2 + y1**2
+
+        r1_squared_coeff = a**2 + c**2 - 1
+        r1_linear_coeff = -2*x1*a - 2*y1*c + 2*a*b + 2*c*d
+        r1_const = k1 - 2*x1*b - 2*y1*d + b**2 + d**2
+
+        # For a quadratic
+        # 0 = ax^2 + bx + c
+        # we have
+        # x = (-b +- sqrt(b^2 - 4ac)) / (2a)
+
+        discriminant_sq = r1_linear_coeff**2 - 4*r1_squared_coeff*r1_const
+        if discriminant_sq < 0:
+            raise ValueError("These values result in an imaginary R")
+
+        discriminant = math.sqrt(discriminant_sq)
+        r1_pos = ((-r1_linear_coeff) + discriminant) / (2 * r1_squared_coeff)
+        r1_neg = ((-r1_linear_coeff) - discriminant) / (2 * r1_squared_coeff)
+
+        """
         range_squared_coefficient = 1 - self.r_coefficient[0][0]*self.r_coefficient[0][0] - self.r_coefficient[1][0]*self.r_coefficient[1][0]
         range_coefficient = 2*base_anchor.X_POS*self.r_coefficient[0][0] + 2*base_anchor.Y_POS*self.r_coefficient[1][0] - 2*self.r_coefficient[0][0]*self.constant[0][0] - 4*self.r_coefficient[1][0]*self.constant[1][0]
         range_constant = -1*(self.base_K - 2*base_anchor.X_POS*self.constant[0][0] - 2*base_anchor.Y_POS*self.constant[1][0] + self.constant[0][0]*self.constant[0][0] + self.constant[1][0]*self.constant[1][0])
@@ -59,9 +91,12 @@ class TDoALocalization:
             r_discriminant = math.sqrt(range_coefficient ** 2 - 4*range_squared_coefficient*range_constant)
         except ValueError:
             raise ValueError("These values result in an imaginary R")
-
-        return (-1*range_coefficient + r_discriminant)/(2*range_squared_coefficient), (-1*range_coefficient - r_discriminant)/(2*range_squared_coefficient)
         
+        return (-1*range_coefficient + r_discriminant)/(2*range_squared_coefficient), (-1*range_coefficient - r_discriminant)/(2*range_squared_coefficient)
+        """
+
+        return (r1_pos, r1_neg)
+
     """
     anchors = list of three anchors
     """

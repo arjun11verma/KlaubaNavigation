@@ -6,9 +6,9 @@ localization_algorithms = TDoALocalization()
 c = 0.299792458
 
 # Arjun test code
-BASE_ANCHOR = anchor('base', 2, 1, 0)
-ANCHOR_1 = anchor(1, 4, 2, (math.sqrt(5) - math.sqrt(2)) / c)
-ANCHOR_2 = anchor(2, 5, 2, (math.sqrt(8) - math.sqrt(2)) / c)
+BASE_ANCHOR = anchor('base', 8, 7, 0)
+ANCHOR_1 = anchor(1, 6, 1, (math.sqrt(50) - math.sqrt(2)) / c)
+ANCHOR_2 = anchor(2, 9, 3, (math.sqrt(29) - math.sqrt(2)) / c)
 
 r_coefficient, constant = localization_algorithms.coordinatesInTermsOfR(BASE_ANCHOR, (ANCHOR_1, ANCHOR_2))
 
@@ -30,7 +30,7 @@ else:
     print("TDoA values out of range")
 
 
-
+"""
 # Mihir test code
 anchorA = anchor(1, 2, 1, 0)
 anchorB = anchor(2, 4, 2, (math.sqrt(5) - math.sqrt(2)) / c)
@@ -42,6 +42,6 @@ anchorC = anchor(3, 5, 2, (math.sqrt(8) - math.sqrt(2)) / c)
 
 x, y = localization_algorithms.harbiApproximation((anchorA, anchorB, anchorC))
 print(f"(x, y) = {x}, {y}")
-
+"""
 # Harbi = Mihir
 # ChanHo = Arjun

@@ -68,7 +68,6 @@ class UnitTest:
             approx_x = r_coefficient[0][0]*chanho_approximated_r + constant[0][0]
             approx_y = r_coefficient[1][0]*chanho_approximated_r + constant[1][0]
 
-
             print(f"Actual x: {self.mobileStation[0]}\tChan-Ho x: {approx_x}\tError: {round((approx_x - self.mobileStation[0]) / self.mobileStation[0] * 100, 3)}")
             print(f"Actual y: {self.mobileStation[1]}\tChan-Ho y: {approx_y}\tError: {round((approx_y - self.mobileStation[1]) / self.mobileStation[1] * 100, 3)}\n")
 
