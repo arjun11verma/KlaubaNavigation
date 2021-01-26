@@ -6,8 +6,8 @@ localization_algorithms = TDoALocalization()
 
 # Arjun test code
 BASE_ANCHOR = anchor('base', 0, 0, 0)
-ANCHOR_1 = anchor(1, 5, 0, 10)
-ANCHOR_2 = anchor(2, 0, 5, 2)
+ANCHOR_1 = anchor(1, 5, 0, 2)
+ANCHOR_2 = anchor(2, 0, 5, 4)
 
 r_coefficient, constant = localization_algorithms.coordinatesInTermsOfR(BASE_ANCHOR, (ANCHOR_1, ANCHOR_2))
 
@@ -20,8 +20,11 @@ print(f'Chan Ho Approximations of R: {r_one}, {r_two}')
 
 chanho_approximated_r = r_one if r_one > 0 else r_two
 
+x, y = localization_algorithms.harbiApproximation((BASE_ANCHOR, ANCHOR_1, ANCHOR_2))
+
 if(chanho_approximated_r > 0):
     print(f'Chan Ho Approximation of (x, y): ({round(r_coefficient[0][0]*chanho_approximated_r + constant[0][0], 3)}, {round(r_coefficient[1][0]*chanho_approximated_r + constant[1][0], 3)})')
+    print(f'Harbi Approximation of (x, y): ({round(x[0], 3)}, {round(y[0], 3)})')
 else:
     print("TDoA values out of range")
 

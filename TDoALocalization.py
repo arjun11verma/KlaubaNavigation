@@ -14,10 +14,10 @@ class TDoALocalization:
         )
 
     def getAnchorCoordinateDifferences(self, base_anchor, anchors):
-        return list(map(lambda anchor : (anchor.X_POS - base_anchor.X_POS, anchor.Y_POS - base_anchor.Y_POS), anchors))
+        return [(anchor.X_POS - base_anchor.X_POS, anchor.Y_POS - base_anchor.Y_POS) for anchor in anchors]
 
     def getR(self, anchors):
-        return list(map(lambda anchor : anchor.TDOA_BASE * c, anchors))
+        return [anchor.TDOA_BASE * c for anchor in anchors]
 
     def getRangeDifferenceMatrix(self, R):
         return np.array([[R[0]], [R[1]]])
@@ -26,10 +26,10 @@ class TDoALocalization:
         return 0.5 * np.array([[R[0]*R[0] - K[0] + base_K], [R[1]*R[1] - K[1] + base_K]])
 
     def getK(self, anchors):
-        return list(map(lambda anchor : anchor.X_POS*anchor.X_POS + anchor.Y_POS*anchor.Y_POS, anchors))
+        return [anchor.X_POS**2 + anchor.Y_POS**2 for anchor in anchors]
 
     def coordinatesInTermsOfR(self, base_anchor, anchors):
-        self.base_K = base_anchor.X_POS*base_anchor.X_POS + base_anchor.Y_POS*base_anchor.Y_POS
+        self.base_K = base_anchor.X_POS**2 + base_anchor.Y_POS**2
         K = self.getK(anchors)
         anchor_coordinate_differences = self.getAnchorCoordinateDifferences(base_anchor, anchors)
         R = self.getR(anchors)
@@ -46,13 +46,13 @@ class TDoALocalization:
     def chanHoApproximationOfR(self, base_anchor):
         # since r is equal to the distance formula, R(1) = K(1) - 2X(1)x - 2Y(1)y + x^2 + y^2
         if not hasattr(self, 'base_K'):
-            self.base_K = base_anchor.X_POS*base_anchor.X_POS + base_anchor.Y_POS*base_anchor.Y_POS
+            self.base_K = base_anchor.X_POS**2 + base_anchor.Y_POS**2
         
         if not (hasattr(self, 'r_coefficient') and hasattr(self, 'constant')):
             raise AttributeError("Please call the coordinates in terms of R method before approximating R")
         
         range_squared_coefficient = 1 - self.r_coefficient[0][0]*self.r_coefficient[0][0] - self.r_coefficient[1][0]*self.r_coefficient[1][0]
-        range_coefficient = 2*base_anchor.X_POS*self.r_coefficient[0][0] + 2*base_anchor.Y_POS*self.r_coefficient[1][0] - 2*self.r_coefficient[0][0]*self.constant[0][0] - 2*2*self.r_coefficient[1][0]*self.constant[1][0]
+        range_coefficient = 2*base_anchor.X_POS*self.r_coefficient[0][0] + 2*base_anchor.Y_POS*self.r_coefficient[1][0] - 2*self.r_coefficient[0][0]*self.constant[0][0] - 4*self.r_coefficient[1][0]*self.constant[1][0]
         range_constant = -1*(self.base_K - 2*base_anchor.X_POS*self.constant[0][0] - 2*base_anchor.Y_POS*self.constant[1][0] + self.constant[0][0]*self.constant[0][0] + self.constant[1][0]*self.constant[1][0])
 
         try:
