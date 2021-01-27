@@ -105,6 +105,8 @@ class TDoALocalization:
         r_one_0, r_two_0 = self.chanHoApproximationOfR(baseAnchor)
 
         chanHoR1 = r_one_0 if r_one_0 > 0 else r_two_0
+        if(chanHoR1 < 0): 
+            raise ValueError("TDoA Values out of Range")
         xo1 = r_coeff_0[0][0] * chanHoR1 + constant_0[0][0]
         yo1 = r_coeff_0[1][0] * chanHoR1 + constant_0[1][0]
 
@@ -123,6 +125,8 @@ class TDoALocalization:
         r_one_1, r_two_1 = self.chanHoApproximationOfR(baseAnchor)
         
         chanHoR2 = r_one_1 if r_one_1 > 0 else r_two_1
+        if(chanHoR2 < 0):
+            raise ValueError("TDoA Values out of Range")
         xo2 = r_coeff_1[0][0] * chanHoR2 + constant_1[0][0]
         yo2 = r_coeff_1[1][0] * chanHoR2 + constant_1[1][0]
 
@@ -147,6 +151,6 @@ class TDoALocalization:
         range_difference_matrix = self.getRangeDifferenceMatrix(R)
         range_k_matrix = self.getRangeKMatrix(R, base_K, K)
 
-        x, y = np.matmul(coordinate_difference_matrix, range_difference_matrix * omega + range_k_matrix)
+        x, y = np.matmul(coordinate_difference_matrix, range_difference_matrix * omega * chanHoR1 + range_k_matrix)
 
         return x, y
