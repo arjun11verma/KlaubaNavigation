@@ -76,12 +76,9 @@ class UnitTest:
             print(f"R Coefficient:\n{r_coefficient}\n")
             print(f"Constant:\n{constant}\n")
 
-        r_one, r_two = localization_algorithms.chanHoApproximationOfR(BASE_ANCHOR)
-        chanho_approximated_r = r_one if r_one > 0 else r_two
+        chanho_approximated_r = localization_algorithms.chanHoApproximationOfR(BASE_ANCHOR)
 
         if verbose:
-            print(f"r_one: {r_one}\n")
-            print(f"r_two: {r_two}\n")
             print(f"Chan Ho R:\n{chanho_approximated_r}\n")
 
         if(chanho_approximated_r > 0):

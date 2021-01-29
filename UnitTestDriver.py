@@ -42,20 +42,27 @@ test.getHarbiApproximation()
 test.finish()
 """
 
+lower_limit = 0
+upper_limit = 10
+
 def generate_range():
-    lower_limit = 1
-    upper_limit = 20
     return (randint(lower_limit, upper_limit), randint(lower_limit, upper_limit))
 
 TOTAL_TRIALS = 100
 
 chanho_coordinate_errors = []
 harbi_coordinate_errors = []
-coordinates = []
+chanho_mobile_station_positions = []
+harbi_mobile_station_positions = []
 
 for i in range(TOTAL_TRIALS):
     ms   = (generate_range())
 
+    bts1 = (lower_limit, lower_limit)
+    bts2 = (lower_limit, upper_limit)
+    bts3 = (upper_limit, lower_limit)
+
+    """
     bts1 = (generate_range())
     while bts1 == ms:
         bts1 = (generate_range())
@@ -67,8 +74,7 @@ for i in range(TOTAL_TRIALS):
     bts3 = (generate_range())
     while bts3 == bts2 or bts3 == bts1 or bts3 == ms:
         bts3 = (generate_range())
-    
-    coordinates.append(ms)
+    """
 
     test = UnitTest(ms, bts1, bts2, bts3, i)
     test.addNoise()
@@ -76,6 +82,7 @@ for i in range(TOTAL_TRIALS):
 
     try:
         chanho_coordinate_errors.append(test.getChanHoApproximation())
+        chanho_mobile_station_positions.append(math.atan2(ms[1], ms[0]) * 180/math.pi)
     except Exception as ex:
         print(f"Test failed:")
         traceback.print_exc()
@@ -83,6 +90,7 @@ for i in range(TOTAL_TRIALS):
 
     try:
         harbi_coordinate_errors.append(test.getHarbiApproximation())
+        harbi_mobile_station_positions.append(math.atan2(ms[1], ms[0]) * 180/math.pi)
     except Exception as ex:
         print(f"Test failed:")
         traceback.print_exc()
@@ -99,29 +107,30 @@ harbi_errors = []
 def vector_magnitude(position_vector):
     return math.sqrt(sum(x ** 2 for x in position_vector))
 
-for error in chanho_coordinate_errors:
-    approximated_vector = error[0]
-    real_vector = error[1]
+def relative_vector_error(coordinate_errors, vector_errors):
+    average_error = 0
 
-    difference_vector = np.subtract(approximated_vector, real_vector)
-    average_chanho_error += abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector))
-    chanho_errors.append(abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector)))
+    for error in coordinate_errors:
+        approximated_vector = error[0]
+        real_vector = error[1]
 
-for error in harbi_coordinate_errors:
-    approximated_vector = error[0]
-    real_vector = error[1]
-    if(math.isnan(approximated_vector[0]) or math.isnan(approximated_vector[1])): pass
+        if(math.isnan(approximated_vector[0]) or math.isnan(approximated_vector[1])): 
+            vector_errors.append(0)
+            pass
+        
+        difference_vector = np.subtract(approximated_vector, real_vector)
+        average_error += abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector))
+        vector_errors.append(abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector)))
     
-    difference_vector = np.subtract(approximated_vector, real_vector)
-    average_harbi_error += abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector))
-    harbi_errors.append(abs(vector_magnitude(difference_vector)/vector_magnitude(approximated_vector)))
+    return average_error/TOTAL_TRIALS
 
-average_chanho_error /= TOTAL_TRIALS
-average_harbi_error /= TOTAL_TRIALS
+average_harbi_error = relative_vector_error(harbi_coordinate_errors, harbi_errors)
 
-print(f'Average vector error of ChanHo Approximation over {TOTAL_TRIALS} trials: {round(average_chanho_error * 100, 3)}%')
+average_chanho_error = relative_vector_error(chanho_coordinate_errors, chanho_errors)
 
-print(f'Average vector error of Harbi Approximation over {TOTAL_TRIALS} trials: {round(average_harbi_error * 100, 3)}%')
+print(f'Average relative vector error of ChanHo Approximation over {TOTAL_TRIALS} trials: {round(average_chanho_error * 100, 3)}%')
+
+print(f'Average relative vector error of Harbi Approximation over {TOTAL_TRIALS} trials: {round(average_harbi_error * 100, 3)}%')
 
 def generatePlot(x_data, y_data, x_title, y_title, title):
     pyplot.step(x_data, y_data, 'o', color = 'black')
@@ -130,7 +139,7 @@ def generatePlot(x_data, y_data, x_title, y_title, title):
     pyplot.ylabel(y_title)
     pyplot.show()
 
-generatePlot(np.arange(len(chanho_errors)), [round(error * 100, 3) for error in chanho_errors], "Trial #", "Predicted Vector Percent Error", "Chanho estimation errors by Trial #" )
+generatePlot(np.array(chanho_mobile_station_positions), [round(error * 100, 3) for error in chanho_errors], "Mobile Station Angle from x axis (degrees)", "Relative Vector Percent Error", "Chanho estimation errors by Mobile Station Position" )
 
 
 

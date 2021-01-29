@@ -80,10 +80,10 @@ class TDoALocalization:
             raise ValueError("These values result in an imaginary R")
 
         discriminant = math.sqrt(discriminant_sq)
-        r1_pos = ((-r1_linear_coeff) + discriminant) / (2 * r1_squared_coeff)
-        r1_neg = ((-r1_linear_coeff) - discriminant) / (2 * r1_squared_coeff)
+        r1_one = ((-r1_linear_coeff) + discriminant) / (2 * r1_squared_coeff)
+        r1_two = ((-r1_linear_coeff) - discriminant) / (2 * r1_squared_coeff)
 
-        return (r1_pos, r1_neg)
+        return min(r1_one, r1_two) if (r1_one > 0 and r1_two > 0) else max(r1_one, r1_two)
 
     """
     anchors = list of three anchors
@@ -102,9 +102,8 @@ class TDoALocalization:
         anchor2 = anchor(2, anchors[2].X_POS, anchors[2].Y_POS, anchors[2].TDOA_BASE)
 
         r_coeff_0, constant_0 = self.coordinatesInTermsOfR(baseAnchor, (anchor1, anchor2))
-        r_one_0, r_two_0 = self.chanHoApproximationOfR(baseAnchor)
+        chanHoR1 = self.chanHoApproximationOfR(baseAnchor)
 
-        chanHoR1 = r_one_0 if r_one_0 > 0 else r_two_0
         if(chanHoR1 < 0): 
             raise ValueError("TDoA Values out of Range")
         xo1 = r_coeff_0[0][0] * chanHoR1 + constant_0[0][0]
@@ -122,9 +121,8 @@ class TDoALocalization:
         anchor2 = anchor(2, anchors[2].X_POS, anchors[2].Y_POS, anchors[2].TDOA_BASE - TDOA_to_subtract)
         
         r_coeff_1, constant_1 = self.coordinatesInTermsOfR(baseAnchor, (anchor1, anchor2))
-        r_one_1, r_two_1 = self.chanHoApproximationOfR(baseAnchor)
+        chanHoR2 = self.chanHoApproximationOfR(baseAnchor)
         
-        chanHoR2 = r_one_1 if r_one_1 > 0 else r_two_1
         if(chanHoR2 < 0):
             raise ValueError("TDoA Values out of Range")
         xo2 = r_coeff_1[0][0] * chanHoR2 + constant_1[0][0]
