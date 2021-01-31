@@ -45,7 +45,7 @@ public:
             double rangeOne = (-1*range_coefficient + discriminant)/(2*range_squared_coefficient);
             double rangeTwo = (-1*range_coefficient - discriminant)/(2*range_squared_coefficient);
 
-            if(rangeOne > 0 and rangeTwo > 0) {
+            if(rangeOne > 0 && rangeTwo > 0) {
                 rangeOne = std::min(rangeOne, rangeTwo);
             } else rangeOne = std::max(rangeOne, rangeTwo);
 
