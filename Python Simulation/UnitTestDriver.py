@@ -48,7 +48,7 @@ upper_limit = 10
 def generate_range():
     return (randint(lower_limit, upper_limit), randint(lower_limit, upper_limit))
 
-TOTAL_TRIALS = 100
+TOTAL_TRIALS = 1
 
 chanho_coordinate_errors = []
 harbi_coordinate_errors = []
@@ -56,7 +56,7 @@ chanho_mobile_station_positions = []
 harbi_mobile_station_positions = []
 
 for i in range(TOTAL_TRIALS):
-    ms   = (generate_range())
+    ms   = (3, 4)
 
     bts1 = (lower_limit, lower_limit)
     bts2 = (lower_limit, upper_limit)
@@ -77,11 +77,11 @@ for i in range(TOTAL_TRIALS):
     """
 
     test = UnitTest(ms, bts1, bts2, bts3, i)
-    test.addNoise()
+    #test.addNoise()
     test.printDetails()
 
     try:
-        chanho_coordinate_errors.append(test.getChanHoApproximation())
+        chanho_coordinate_errors.append(test.getChanHoApproximation(verbose=True))
         chanho_mobile_station_positions.append(math.atan2(ms[1], ms[0]) * 180/math.pi)
     except Exception as ex:
         print(f"Test failed:")
@@ -97,6 +97,8 @@ for i in range(TOTAL_TRIALS):
         print()
     
     test.finish()
+
+"""
 
 average_chanho_error = 0
 average_harbi_error = 0
@@ -141,5 +143,5 @@ def generatePlot(x_data, y_data, x_title, y_title, title):
 
 generatePlot(np.array(chanho_mobile_station_positions), [round(error * 100, 3) for error in chanho_errors], "Mobile Station Angle from x axis (degrees)", "Relative Vector Percent Error", "Chanho estimation errors by Mobile Station Position" )
 
-
+"""
 

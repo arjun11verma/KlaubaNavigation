@@ -70,6 +70,10 @@ class TDoALocalization:
         r1_linear_coeff = -2*x1*a - 2*y1*c + 2*a*b + 2*c*d
         r1_const = k1 - 2*x1*b - 2*y1*d + b**2 + d**2
 
+        print(f'Squared:  {r1_squared_coeff}')
+        print(f'Linear:  {r1_linear_coeff}')
+        print(f'Const:  {r1_const}')
+
         # For a quadratic
         # 0 = ax^2 + bx + c
         # we have
@@ -80,8 +84,11 @@ class TDoALocalization:
             raise ValueError("These values result in an imaginary R")
 
         discriminant = math.sqrt(discriminant_sq)
+        print(f'Discriminant: {discriminant}')
         r1_one = ((-r1_linear_coeff) + discriminant) / (2 * r1_squared_coeff)
         r1_two = ((-r1_linear_coeff) - discriminant) / (2 * r1_squared_coeff)
+
+        print(f'One: {r1_one}, Two: {r1_two}')
 
         return min(r1_one, r1_two) if (r1_one > 0 and r1_two > 0) else max(r1_one, r1_two)
 
