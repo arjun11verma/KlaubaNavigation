@@ -1,0 +1,1 @@
+Contains code used by all anchors. Prefer to have a single codebase for all anchors. Feel free to use the SDCard to store a file about the anchor ID etc. and use it for scheduling or anything else needed.

@@ -16,8 +16,8 @@ class Ranging {
     uint32_t calculateRange() {
         Ra = (RespRxTime - PollTxTime).wrap();
         Rb = (FinalRxTime - RespTxTime).wrap();
-        Da = (RespTxTime - PollRxTime).wrap();
-        Db = (FinalTxTime - RespRxTime).wrap();
+        Da = (FinalTxTime - RespRxTime).wrap();
+        Db = (RespTxTime - PollRxTime).wrap();
         /*
         Serial.print("Ra = ");
         Serial.println(Ra);
@@ -35,8 +35,8 @@ class Ranging {
         //Serial.print("ToF: ");
         //Serial.println(ToF);
         float ToF_microseconds = ToF.getAsMicroSeconds();
-        //Serial.print("ToF_microseconds: ");
-        //Serial.println(ToF_microseconds);
+        Serial.print("ToF_microseconds: ");
+        Serial.println(ToF_microseconds);
         uint32_t output = (uint32_t)(ToF_microseconds*SPEED_OF_LIGHT/1000);
         //Serial.print("Output: ");
         //Serial.println(output);
