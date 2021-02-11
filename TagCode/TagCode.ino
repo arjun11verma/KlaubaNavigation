@@ -32,6 +32,8 @@
 #include<TimeLib.h>
 #include "RTClib.h"
 #include<Wire.h>
+#include "ChanHoApproximator.h"
+#include "HarbiApproximator.h"
 
 #define VBATPIN A2
 #define LED_PIN 12
@@ -75,6 +77,10 @@ const uint8_t PIN_SS = 4; // spi select pin
 #endif
 */
 
+ChanHoApproximator ChanHoAppoximatorObject = ChanHoApproximator(0, 0, 2.5, 0, 0, 2.5);
+HarbiApproximator HarbiApproximatorObject = HarbiApproximator(0, 0, 2.5, 0, 0, 2.5);
+
+double storedTDoA[10];
 
 // DEBUG packet sent status and count
 volatile boolean received = false;
@@ -175,6 +181,7 @@ void receiver_perm(void ) {
 }
 
 void setup() {
+  
   pinMode(LED_PIN, OUTPUT);
   pinMode(NOISE_PIN, OUTPUT);
   pinMode(GOOD_PIN, OUTPUT);
@@ -476,11 +483,19 @@ void my_generic_receive(void)
       any_msg_get_ts(&rx_packet[RESP_MSG_PREV_RB_IDX], &prev_RB);
       thisRange[response_counter].prev_Db = DW1000Time((int64_t)prev_DB);
       thisRange[response_counter].prev_Rb = DW1000Time((int64_t)prev_RB);
-      thisRange[response_counter].calculateTDoARange();
+      storedTDoA[response_counter] = thisRange[response_counter].calculateTDoARange();
 
       thisRange[response_counter].RespRxTime_T = rxTS;
 
       response_counter++;
+
+      if(response_counter >= 2) {
+        double* chanHoLocation = ChanHoApproximatorObject.calculateLocation(storedTDoA[1], storedTDoA[2]);
+        double* harbiLocation = HarbiApproximatorObject.calculateLocation(storedTDoA[1], storedTDoA[2]);
+
+        Serial.print("ChanHo Location: " + chanHoLocation[0] + ", " + chanHoLocation[1]);
+        Serial.print("Harbi Location: " + harbiLocation[0] + ", " + harbiLocation[1]);
+      }
       }
 
       }   
@@ -520,7 +535,7 @@ void my_generic_receive(void)
 void loop()
 {
   my_generic_receive();
-  }
+}
 
 
 void show_packet(byte packet[], int num) {

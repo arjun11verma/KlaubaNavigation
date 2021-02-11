@@ -1,3 +1,5 @@
+
+
 class Ranging {
     public:
     const uint64_t SPEED_OF_LIGHT = 299792458L; 
@@ -31,7 +33,7 @@ class Ranging {
         RT2 = (FinalRxTime_T-RespRxTime_T).wrap();
       }
 
-    int32_t calculateTDoARange() {
+    double calculateTDoARange() {
 
         //print_all_time();
         DW1000Time TDoA;
@@ -40,7 +42,7 @@ class Ranging {
         //Serial.println(ToF);
         float TDoA_microseconds = TDoA.getAsMicroSeconds();
 
-        int32_t output = (int32_t)(TDoA_microseconds*SPEED_OF_LIGHT/1000);
+        double output = (double)(TDoA_microseconds*1000);
         Serial.print("Output: ");
         
         Serial.println(output);
