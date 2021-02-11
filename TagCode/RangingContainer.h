@@ -40,11 +40,11 @@ class Ranging {
         //Serial.println(ToF);
         float TDoA_microseconds = TDoA.getAsMicroSeconds();
 
-        int32_t output = (int32_t)(TDoA_microseconds*SPEED_OF_LIGHT/1000);
+        float output = (TDoA_microseconds* 1000);
         Serial.print("Output: ");
         
         Serial.println(output);
-        return output;
+        return (int32_t)(TDoA_microseconds * SPEED_OF_LIGHT);
         
     }
 
