@@ -4,7 +4,6 @@
  */
 
 #include "ChanHoApproximator.h"
-#include <iostream>
 
 #ifndef KLAUBANAVIGATIONFILES_HARBIAPPROXIMATOR_H
 #define KLAUBANAVIGATIONFILES_HARBIAPPROXIMATOR_H
@@ -16,6 +15,10 @@ public:
     double anchorOneX, anchorOneY;
     double anchorTwoX, anchorTwoY;
     double anchorThreeX, anchorThreeY;
+
+    HarbiApproximator() {
+      
+    }
 
     HarbiApproximator(double anchorOneX, double anchorOneY,
         double anchorTwoX, double anchorTwoY,
