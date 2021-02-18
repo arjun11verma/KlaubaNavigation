@@ -63,7 +63,6 @@ int disable_imu = 1;
 #define OUR_UWB_FEATHER 1
 #define AUS_UWB_FEATHER 0
 
-
 #if(OUR_UWB_FEATHER==1)
 const uint8_t PIN_RST = 9; // reset pin
 const uint8_t PIN_IRQ = 17; // irq pin
@@ -178,7 +177,6 @@ void receiver_perm(void ) {
 }
 
 void setup() {
-  
   pinMode(LED_PIN, OUTPUT);
   pinMode(NOISE_PIN, OUTPUT);
   pinMode(GOOD_PIN, OUTPUT);
@@ -487,23 +485,16 @@ void my_generic_receive(void)
       response_counter++;
 
       if(response_counter >= 2) {
-
-        ChanHoApproximator chanHo(0.0, 0.0, 3.0, 0.0, 0.0, 2.5);
-        HarbiApproximator harbi(0.0, 0.0, 3.0, 0.0, 0.0, 2.5);
+        HarbiApproximator HarbiApproximatorObject(0, 0, 0.35, 0, 0, 0.35);
+        ChanHoApproximator ChanHoAppoximatorObject(0, 0, 0.35, 0, 0, 0.35);
         
-        double* chanHoLocation = chanHo.calculateLocation(storedTDoA[1], storedTDoA[2]);
-        double* harbiLocation = harbi.calculateLocation(storedTDoA[1], storedTDoA[2]);
+        double* chanHoLocation = ChanHoAppoximatorObject.calculateLocation(storedTDoA[0], storedTDoA[1]);
+        double* harbiLocation = HarbiApproximatorObject.calculateLocation(storedTDoA[0], storedTDoA[1]);
 
-        Serial.print("ChanHo Location: ");
-        Serial.print(*chanHoLocation, DEC);
-        Serial.print(", ");
-        Serial.print(*(++chanHoLocation), DEC);
-        Serial.println();
-
-        Serial.print("Harbi Location: ");
-        Serial.print(*harbiLocation, DEC);
-        Serial.print(", ");
-        Serial.print(*(++harbiLocation), DEC);
+        Serial.print("X Location: ");
+        Serial.println(chanHoLocation[0]);
+        Serial.print("Y Location: ");
+        Serial.println(chanHoLocation[1]);
       }
       }
 

@@ -1,8 +1,7 @@
 //
 // Created by arjun on 1/31/2021.
 //
-#include <iostream>
-#include <cmath>
+#include <math.h>
 
 #ifndef KLAUBANAVIGATIONFILES_CHANHOAPRROXIMATOR_H
 #define KLAUBANAVIGATIONFILES_CHANHOAPRROXIMATOR_H
@@ -16,6 +15,10 @@ public:
     double* ranges;
     double* rangeKMatrix;
     double R1;
+
+    ChanHoApproximator() {
+      
+    }
 
     ChanHoApproximator(double Xbase, double Ybase, double Xone, double Yone, double Xtwo, double Ytwo) {
         this->Xbase = Xbase;
@@ -42,18 +45,15 @@ public:
 
         double discriminant = range_coefficient*range_coefficient - 4*range_squared_coefficient*range_constant;
 
-        if(discriminant < 0) {
-          Serial.println("Error - Negative discriminant");
-          return nullptr;
-        }
-        discriminant = std::sqrt(discriminant);
-
+        if (1 == 1) {
+            discriminant = sqrt(discriminant);
+            
         double rangeOne = (-1*range_coefficient + discriminant)/(2*range_squared_coefficient);
         double rangeTwo = (-1*range_coefficient - discriminant)/(2*range_squared_coefficient);
 
-        if(rangeOne > 0 && rangeTwo > 0) {
-            rangeOne = std::min(rangeOne, rangeTwo);
-        } else rangeOne = std::max(rangeOne, rangeTwo);
+            if(rangeOne > 0 && rangeTwo > 0) {
+                rangeOne = min(rangeOne, rangeTwo);
+            } else rangeOne = max(rangeOne, rangeTwo);
 
         this->R1 = rangeOne;
 
@@ -62,15 +62,8 @@ public:
 
         double* locationFromRange = new double[2];
 
-        locationFromRange[0] = coordinatesInTermsOfR[0][0]*rangeOne + coordinatesInTermsOfR[1][0];
-        locationFromRange[1] = coordinatesInTermsOfR[0][1]*rangeOne + coordinatesInTermsOfR[1][1];
-
-        Serial.print("Loc from Range X: ");
-        Serial.println(locationFromRange[0]);
-        Serial.print("Loc from Range Y: ");
-        Serial.println(locationFromRange[1]);
-
-        return locationFromRange;
+            return locationFromRange;
+        }
     }
 
 private:

@@ -45,7 +45,6 @@ int AlarmLed = 0;// = rx_packet[LED_IDX] & 0x02;
 #define INIT_RTC_ALWAYS 0
 
 #define USB_CONNECTION 0
-#define INITIATOR 0         /******CHANGE THIS******/
 #define IGNORE_IMU 1
 Adafruit_LSM9DS1 lsm = Adafruit_LSM9DS1();
 #define IMU_READINGS_MAX 18*4
@@ -54,6 +53,7 @@ byte imu_buffer[IMU_READINGS_MAX];
 int disable_imu = 1;
 //int chck =2390;
 
+#define INITIATOR 0         /******CHANGE THIS******/
 #define DEBUG_PRINT 1
 // connection pins
 #define OUR_UWB_FEATHER 1
@@ -87,7 +87,7 @@ byte rx_resp_msg[MAX_RESP_LEN] = {RESP_MSG_TYPE, 0x02, 0, 0, 0, 0, 0};
 byte tx_final_msg[MAX_FINAL_LEN] = {FINAL_MSG_TYPE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int response_counter = 0;
 int num_nodes =2;           /******CHANGE THIS******/
-int myDevID = 2;            /******CHANGE THIS******/
+int myDevID = 1;            /******CHANGE THIS******/
 
 Ranging thisRange;
 
