@@ -12,8 +12,6 @@ public:
     double Xbase, Ybase, Xone, Yone, Xtwo, Ytwo;
     double* KMatrix;
     double** anchorCoordinateDifferences;
-    double* ranges;
-    double* rangeKMatrix;
     double R1;
 
     ChanHoApproximator() {
@@ -31,6 +29,21 @@ public:
         generateKMatrix();
         generateAnchorCoordinateDifferenceMatrix();
     }
+
+    double* getRanges(double TDoAone, double TDoAtwo) {
+        auto* ranges = new double[2];
+        ranges[0] = TDoAone * c;
+        ranges[1] = TDoAtwo * c;
+        return ranges;
+    }
+
+    double* generateRangeKMatrix(double* ranges) {
+        auto* rangeKMatrix = new double[2];
+        rangeKMatrix[0] = 0.5 * (ranges[0] * ranges[0] - KMatrix[1] + KMatrix[0]);
+        rangeKMatrix[1] = 0.5 * (ranges[1] * ranges[1] - KMatrix[2] + KMatrix[0]);
+        return rangeKMatrix;
+    }
+    
     double* calculateLocation(double TDoAone, double TDoAtwo) {
         double** coordinatesInTermsOfR = coordinatesInTermsOfRange(TDoAone, TDoAtwo);
 
@@ -86,22 +99,6 @@ private:
         anchorCoordinateDifferences[0][0] = d * determinant*-1;
     }
 
-    double* getRanges(double TDoAone, double TDoAtwo) {
-        auto* ranges = new double[2];
-        ranges[0] = TDoAone * c;
-        ranges[1] = TDoAtwo * c;
-        this->ranges = ranges;
-        return ranges;
-    }
-
-    double* generateRangeKMatrix(double* ranges) {
-        auto* rangeKMatrix = new double[2];
-        rangeKMatrix[0] = 0.5 * (ranges[0] * ranges[0] - KMatrix[1] + KMatrix[0]);
-        rangeKMatrix[1] = 0.5 * (ranges[1] * ranges[1] - KMatrix[2] + KMatrix[0]);
-        this->rangeKMatrix = rangeKMatrix;
-        return rangeKMatrix;
-    }
-
     void generateKMatrix() {
         KMatrix = new double[3];
         KMatrix[0] = Xbase*Xbase + Ybase*Ybase;
@@ -116,6 +113,7 @@ private:
         auto* rangeConstant = new double[2];
 
         double* ranges = getRanges(TDoAone, TDoAtwo);
+        
         double* rangeKMatrix = generateRangeKMatrix(ranges);
 
         rangeCoefficient[0] = anchorCoordinateDifferences[0][0]*ranges[0] + anchorCoordinateDifferences[0][1]*ranges[1];

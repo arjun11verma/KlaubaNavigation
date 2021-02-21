@@ -75,6 +75,7 @@ const uint8_t PIN_SS = 4; // spi select pin
 
 
 // DEBUG packet sent status and count
+int myDevID = 2;            /******CHANGE THIS******/
 volatile boolean received = false;
 volatile boolean error = false;
 volatile int16_t numReceived = 0; // todo check int type
@@ -87,7 +88,6 @@ byte rx_resp_msg[MAX_RESP_LEN] = {RESP_MSG_TYPE, 0x02, 0, 0, 0, 0, 0};
 byte tx_final_msg[MAX_FINAL_LEN] = {FINAL_MSG_TYPE, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0};
 int response_counter = 0;
 int num_nodes =2;           /******CHANGE THIS******/
-int myDevID = 1;            /******CHANGE THIS******/
 
 Ranging thisRange;
 
@@ -143,7 +143,7 @@ DeviceRespTs deviceRespTs[MAX_DEVICES_TOGETHER];
 int currentDeviceIndex = 0;
 
 
-void receiver(uint16_t rxtoval=0 ) {
+void receiver(uint16_t rxtoval=100) {
   received = false;
   DW1000.newReceive();
   DW1000.setDefaults();
@@ -360,7 +360,7 @@ void handleReceived() {
   // status change on reception success
   
   DW1000.getData(rx_packet, DW1000.getDataLength());
-//  Serial.println("Received something...");
+  Serial.println("Received something...");
   received = true;
   show_packet_8B(rx_packet);
 }

@@ -82,8 +82,8 @@ public:
         double omega = sqrt(traceQQt / 2);
         
         double** anchorCoordinateDifferences = chanHoOne.anchorCoordinateDifferences;
-        double* ranges = chanHoOne.ranges;
-        double* rangeKMatrix = chanHoOne.rangeKMatrix;
+        double* ranges = chanHoOne.getRanges(TDoATwo, TDoAThree);
+        double* rangeKMatrix = chanHoOne.generateRangeKMatrix(ranges);
 
         double productMatrix[2];
 

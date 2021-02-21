@@ -193,20 +193,20 @@ void setup() {
       break;
     #endif
   }
-Serial.print("Waiting...");
+//Serial.print("Waiting...");
 delay(5000);
-Serial.print("Should see this...");
+//Serial.print("Should see this...");
   //Setting up the RTC Clock
   if (! rtc.begin()) {
-    Serial.println("Couldn't find RTC");
+    //Serial.println("Couldn't find RTC");
     //while (1);
   }
   
   if (! rtc.initialized()) {
-    Serial.println("RTC is NOT running!");
+    //Serial.println("RTC is NOT running!");
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
-    Serial.println("Setting new time");
+    //Serial.println("Setting new time");
     // This line sets the RTC with an explicit date & time, for example to set
     // January 21, 2014 at 3am you would call:
      rtc.adjust(DateTime(2020, 10, 17, 19, 40, 0));
@@ -221,46 +221,46 @@ Serial.print("Should see this...");
   //SoftRTC.begin(rtc.now());  // Initialize SoftRTC to the current time
 
 //while(1) {
-  Serial.println("Current Time");
+  //Serial.println("Current Time");
   DateTime now = rtc.now();
-  Serial.print(now.year());
-  Serial.print("/");
-  Serial.print(now.month());
-  Serial.print("/");
-  Serial.print(now.day());
-  Serial.print(" ");
-  Serial.print(now.hour());
-  Serial.print(":");
-  Serial.print(now.minute());
-  Serial.print(":");
-  Serial.print(now.second());
+  //Serial.print(now.year());
+  //Serial.print("/");
+  //Serial.print(now.month());
+  //Serial.print("/");
+  //Serial.print(now.day());
+  //Serial.print(" ");
+  //Serial.print(now.hour());
+  //Serial.print(":");
+  //Serial.print(now.minute());
+  //Serial.print(":");
+  //Serial.print(now.second());
   delay(1000);
 //}
-  Serial.print("Initializing SD card...");
+  //Serial.print("Initializing SD card...");
   //delay(1000);
   if (!sd.begin(SDChipSelect, SPI_FULL_SPEED)) {
-    Serial.println("SDCard Initialization failed!");
+    //Serial.println("SDCard Initialization failed!");
     SDEnabled = 0;
   } else {
-    Serial.println("SDCard Initialization done.");
+    //Serial.println("SDCard Initialization done.");
     SDEnabled = 1;
   }
 
   if (SDEnabled==1) {
     sprintf(filename, "dist%03d.txt", filenum);
     if (!store_distance.open(filename, O_WRITE|O_CREAT)) {
-      Serial.println("Could not create file");
+      //Serial.println("Could not create file");
       delay(10000);
     }
   }
   randomSeed(analogRead(0));
-  Serial.println(F("Peer-peer ranging protocol"));
-  Serial.println("Free memory: ");
-  Serial.println(freeMemory());
+  //Serial.println(F("Peer-peer ranging protocol"));
+  //Serial.println("Free memory: ");
+  //Serial.println(freeMemory());
   // initialize the driver
   DW1000.begin(PIN_IRQ, PIN_RST);
   DW1000.select(PIN_SS);
-  Serial.println(F("DW1000 initialized ..."));
+  //Serial.println(F("DW1000 initialized ..."));
   // general configuration
   DW1000.newConfiguration();
   DW1000.setDefaults();
@@ -268,17 +268,17 @@ Serial.print("Should see this...");
   DW1000.setNetworkId(10);
   DW1000.enableMode(DW1000.MODE_LONGDATA_RANGE_LOWPOWER);
   DW1000.commitConfiguration();
-  Serial.println(F("Committed configuration ..."));
+  //Serial.println(F("Committed configuration ..."));
   // DEBUG chip info and registers pretty printed
   char msg[128];
   DW1000.getPrintableDeviceIdentifier(msg);
-  Serial.print("Device ID: "); Serial.println(msg);
+  //Serial.print("Device ID: "); Serial.println(msg);
   DW1000.getPrintableExtendedUniqueIdentifier(msg);
-  Serial.print("Unique ID: "); Serial.println(msg);
+  //Serial.print("Unique ID: "); Serial.println(msg);
   DW1000.getPrintableNetworkIdAndShortAddress(msg);
-  Serial.print("Network ID & Device Address: "); Serial.println(msg);
+  //Serial.print("Network ID & Device Address: "); Serial.println(msg);
   DW1000.getPrintableDeviceMode(msg);
-  Serial.print("Device mode: "); Serial.println(msg);
+  //Serial.print("Device mode: "); Serial.println(msg);
   // attach callback for (successfully) received messages
   DW1000.attachReceivedHandler(handleReceived);
   DW1000.attachReceiveTimeoutHandler(handleRxTO);
@@ -331,7 +331,7 @@ digitalWrite(DEV_INDICATOR_PIN, 0);
 #if (INITIATOR==1)
   while (!lsm.begin())
   {
-    Serial.println("Oops ... unable to initialize the LSM9DS1. Check your wiring!");
+    //Serial.println("Oops ... unable to initialize the LSM9DS1. Check your wiring!");
     delay(1000);
     #if IGNORE_IMU==1
     disable_imu = 1;
@@ -339,7 +339,7 @@ digitalWrite(DEV_INDICATOR_PIN, 0);
     #endif
   }
   if (disable_imu==0) {
-  Serial.println("Found LSM9DS1 9DOF");
+  //Serial.println("Found LSM9DS1 9DOF");
   // 1.) Set the accelerometer range
   lsm.setupAccel(lsm.LSM9DS1_ACCELRANGE_2G);
   //lsm.setupAccel(lsm.LSM9DS1_ACCELRANGE_4G);
@@ -388,7 +388,7 @@ void handleReceived() {
 
 void handleError() {
   error = true;
-  Serial.println("Error ");
+  //Serial.println("Error ");
 
   receiver(0);
 }
@@ -399,9 +399,9 @@ void handleRxTO() {
   
 
   #if (DEBUG_PRINT==1)
-  Serial.println("Rx Timeout");
-  Serial.println("State: ");
-  Serial.println(current_state);
+  //Serial.println("Rx Timeout");
+  //Serial.println("State: ");
+  //Serial.println(current_state);
   #endif
   receiver(0);
 }
@@ -485,15 +485,16 @@ void my_generic_receive(void)
       response_counter++;
 
       if(response_counter >= 2) {
-        HarbiApproximator HarbiApproximatorObject(0, 0, 0.35, 0, 0, 0.35);
-        ChanHoApproximator ChanHoAppoximatorObject(0, 0, 0.35, 0, 0, 0.35);
+        ChanHoApproximator ChanHoAppoximatorObject(0, 0, 2, 0, 0, 2); // Make sure you put this in correct otherwise you'll get a dependent matrix which will give you NaN output!
         
         double* chanHoLocation = ChanHoAppoximatorObject.calculateLocation(storedTDoA[0], storedTDoA[1]);
-        double* harbiLocation = HarbiApproximatorObject.calculateLocation(storedTDoA[0], storedTDoA[1]);
 
-        Serial.print("X Location: ");
-        Serial.println(chanHoLocation[0]);
-        Serial.print("Y Location: ");
+        Serial.print(storedTDoA[0]);
+        Serial.print(", ");
+        Serial.print(storedTDoA[1]);
+        Serial.print(", ");
+        Serial.print(chanHoLocation[0]);
+        Serial.print(", ");
         Serial.println(chanHoLocation[1]);
       }
       }
@@ -501,7 +502,7 @@ void my_generic_receive(void)
       }   
       else if(rx_packet[0] == FINAL_MSG_TYPE)
       {
-        Serial.println("=================================");
+        //Serial.println("=================================");
         currentDeviceIndex = rx_packet[SRC_IDX];
         recvd_resp_seq = rx_packet[SEQ_IDX] +  ((uint16_t)rx_packet[SEQ_IDX+1] << 8);
         DW1000Time rxTS; 
@@ -541,10 +542,10 @@ void loop()
 void show_packet(byte packet[], int num) {
   #if (DEBUG_PRINT==1)
   for (int i=0;i<num;i++) {
-    Serial.print(packet[i], HEX);
-    Serial.print(" ");
+    //Serial.print(packet[i], HEX);
+    //Serial.print(" ");
   }
-  Serial.println(" ");
+  //Serial.println(" ");
   #endif
   
 }
@@ -561,8 +562,8 @@ void show_packet_8B(byte packet[]) {
     msg1 += packet[i];
     msg2 += packet[i+4];
   }
-  Serial.print(msg1, HEX);
-  Serial.println(msg2, HEX);
+  //Serial.print(msg1, HEX);
+  //Serial.println(msg2, HEX);
 
   #endif
   

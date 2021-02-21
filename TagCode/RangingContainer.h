@@ -43,9 +43,9 @@ class Ranging {
         float TDoA_microseconds = TDoA.getAsMicroSeconds();
 
         double output = (double)(TDoA_microseconds*1000);
-        Serial.print("Output: ");
+        //Serial.print("Output: ");
         
-        Serial.println(output);
+        //Serial.println(output);
         return output;
         
     }
@@ -61,6 +61,7 @@ class Ranging {
 
 
     void print_all_time(){
+      /*
       Serial.print("Ra: ");
       Serial.println(Ra.getAsMicroSeconds());
       Serial.print("Db: ");
@@ -73,7 +74,8 @@ class Ranging {
       Serial.print("Da: ");
       Serial.println(Da.getAsMicroSeconds());
       Serial.print("RT2: ");
-      Serial.println(RT2.getAsMicroSeconds());   
+      Serial.println(RT2.getAsMicroSeconds());
+      */   
       }
 
       
