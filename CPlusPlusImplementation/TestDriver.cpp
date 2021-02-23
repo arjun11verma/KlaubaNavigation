@@ -17,15 +17,21 @@ int main() {
 
 	double anchorOneX = 0.0;
 	double anchorOneY = 0.0;
-	double anchorTwoX = 0.0;
-	double anchorTwoY = 10.0;
-	double anchorThreeX = 10.0;
-	double anchorThreeY = 0.0;
+	double anchorTwoX = 3.0;
+	double anchorTwoY = 0.0;
+	double anchorThreeX = 0.0;
+	double anchorThreeY = 2.5;
 
 	double mobileX = 3.0;
 	double mobileY = 4.0;
 
-	runTest(anchorOneX, anchorOneY, anchorTwoX, anchorTwoY, anchorThreeX, anchorThreeY, mobileX, mobileY);
+	ChanHoApproximator chanHo(anchorOneX, anchorOneY, anchorTwoX, anchorTwoY, anchorThreeX, anchorThreeY);
+	double* chanHoEstimate = chanHo.calculateLocation(-0.45, 2.66);
+
+	std::cout << "Chan ho estimate: (" << chanHoEstimate[0] << ", " << chanHoEstimate[1] << ")" << std::endl;
+	delete chanHoEstimate;
+
+	//runTest(anchorOneX, anchorOneY, anchorTwoX, anchorTwoY, anchorThreeX, anchorThreeY, mobileX, mobileY);
 	
 	return 0;
 }

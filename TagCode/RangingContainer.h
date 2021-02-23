@@ -41,7 +41,6 @@ class Ranging {
         //Serial.print("ToF: ");
         //Serial.println(ToF);
         float TDoA_microseconds = TDoA.getAsMicroSeconds();
-
         double output = (double)(TDoA_microseconds*1000);
         //Serial.print("Output: ");
         
