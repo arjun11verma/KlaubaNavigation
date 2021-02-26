@@ -45,6 +45,13 @@
 int AlarmNoise = 0;// = rx_packet[LED_IDX] & 0x01;
 int AlarmLed = 0;// = rx_packet[LED_IDX] & 0x02;
 
+const int initiator_x = 0;
+const int initiator_y = 0;
+const int anchor_one_x = 2.08;
+const int anchor_one_y = 0;
+const int anchor_two_x = 0;
+const int anchor_two_y = 2.08;
+
 #define INIT_RTC_ALWAYS 0
 
 #define TAG 1
@@ -195,7 +202,7 @@ void setup() {
   }
 //Serial.print("Waiting...");
 delay(5000);
-//Serial.print("Should see this...");
+Serial.print("Should see this...");
   //Setting up the RTC Clock
   if (! rtc.begin()) {
     //Serial.println("Couldn't find RTC");
@@ -485,7 +492,7 @@ void my_generic_receive(void)
       response_counter++;
 
       if(response_counter >= 2) {
-        ChanHoApproximator ChanHoAppoximatorObject(0, 0, 2, 0, 0, 2); // Make sure you put this in correct otherwise you'll get a dependent matrix which will give you NaN output!
+        ChanHoApproximator ChanHoAppoximatorObject(initiator_x, initiator_y, anchor_one_x, anchor_one_y, anchor_two_x, anchor_two_y); // Make sure you put this in correct otherwise you'll get a dependent matrix which will give you NaN output!
         
         double* chanHoLocation = ChanHoAppoximatorObject.calculateLocation(storedTDoA[0], storedTDoA[1]);
 
@@ -495,7 +502,19 @@ void my_generic_receive(void)
         Serial.print(", ");
         Serial.print(chanHoLocation[0]);
         Serial.print(", ");
-        Serial.println(chanHoLocation[1]);
+        Serial.print(chanHoLocation[1]);
+        Serial.print(", ");
+        Serial.print(initiator_x);
+        Serial.print(", ");
+        Serial.print(initiator_y);
+        Serial.print(", ");
+        Serial.print(anchor_one_x);
+        Serial.print(", ");
+        Serial.print(anchor_one_y);
+        Serial.print(", ");
+        Serial.print(anchor_two_x);
+        Serial.print(", ");
+        Serial.println(anchor_two_y);
       }
       }
 
@@ -542,7 +561,7 @@ void loop()
 void show_packet(byte packet[], int num) {
   #if (DEBUG_PRINT==1)
   for (int i=0;i<num;i++) {
-    //Serial.print(packet[i], HEX);
+    Serial.print(packet[i], HEX);
     //Serial.print(" ");
   }
   //Serial.println(" ");

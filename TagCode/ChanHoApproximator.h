@@ -58,25 +58,28 @@ public:
 
         double discriminant = range_coefficient*range_coefficient - 4*range_squared_coefficient*range_constant;
 
-        if (1 == 1) {
-            discriminant = sqrt(discriminant);
-            
-        double rangeOne = (-1*range_coefficient + discriminant)/(2*range_squared_coefficient);
-        double rangeTwo = (-1*range_coefficient - discriminant)/(2*range_squared_coefficient);
-
-            if(rangeOne > 0 && rangeTwo > 0) {
-                rangeOne = min(rangeOne, rangeTwo);
-            } else rangeOne = max(rangeOne, rangeTwo);
-
-        this->R1 = rangeOne;
-
-        Serial.print("R1: ");
-        Serial.println(rangeOne);
-
         double* locationFromRange = new double[2];
 
-            return locationFromRange;
+        locationFromRange[0] = 0;
+        locationFromRange[1] = 0;
+
+        if (discriminant > 0) {
+            discriminant = sqrt(discriminant);
+            
+            double rangeOne = (-1*range_coefficient + discriminant)/(2*range_squared_coefficient);
+            double rangeTwo = (-1*range_coefficient - discriminant)/(2*range_squared_coefficient);
+    
+                if(rangeOne > 0 && rangeTwo > 0) {
+                    rangeOne = min(rangeOne, rangeTwo);
+                } else rangeOne = max(rangeOne, rangeTwo);
+    
+            this->R1 = rangeOne;
+
+            locationFromRange[0] = coordinatesInTermsOfR[0][0]*rangeOne + coordinatesInTermsOfR[1][0];
+            locationFromRange[1] = coordinatesInTermsOfR[0][1]*rangeOne + coordinatesInTermsOfR[1][1];
         }
+
+        return locationFromRange;
     }
 
 private:
