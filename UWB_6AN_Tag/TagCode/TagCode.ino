@@ -32,6 +32,8 @@
 #include<TimeLib.h>
 #include "RTClib.h"
 #include<Wire.h>
+#include "ChanHoApproximator.h"
+#include "HarbiApproximator.h"
 
 #define VBATPIN A2
 #define LED_PIN 12
@@ -491,6 +493,36 @@ void my_generic_receive(void)
       thisRange[response_counter].RespRxTime_T = rxTS;
 
       response_counter++;
+
+      if (response_counter >= 2) {
+
+        Serial.println();
+        const double anchorOneX = 0.0;
+        const double anchorOneY = 0.0;
+        const double anchorTwoX = 0.0;
+        const double anchorTwoY = 0.8;
+        const double anchorThreeX = 0.8;
+        const double anchorThreeY = 0.0;
+
+        double anchorTwoTDOA = thisRange[0].calculateTDoARange();
+        double anchorThreeTDOA = thisRange[1].calculateTDoARange();
+        
+        ChanHoApproximator chanHo(anchorOneX, anchorOneY, anchorTwoX, anchorTwoY, anchorThreeX, anchorThreeY);
+        double* chanHoEstimate = chanHo.calculateLocation(anchorTwoTDOA, anchorThreeTDOA);
+        char buff1[50];
+        sprintf(buff1, "Chan Ho: (%d, %d)", chanHoEstimate[0], chanHoEstimate[1]);
+        Serial.println(buff1);
+      
+        HarbiApproximator harbi(anchorOneX, anchorOneY, anchorTwoX, anchorTwoY, anchorThreeX, anchorThreeY);
+        double* locationEstimate = harbi.calculateLocation(anchorTwoTDOA, anchorThreeTDOA);
+        char buff2[50];
+        sprintf(buff2, "Harbi: (%d, %d)", locationEstimate[0], locationEstimate[1]);
+        Serial.println(buff2);
+        Serial.println();
+      
+        delete chanHoEstimate;
+        delete locationEstimate;
+      }
       }
     }   
       else if(rx_packet[0] == FINAL_MSG_TYPE)
